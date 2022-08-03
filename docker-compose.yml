@@ -1,0 +1,17 @@
+version: "3.5"
+services:
+  s3_exporter:
+    build:
+      context: .
+    restart: always
+    ports:
+      - "9327:9327"
+    restart: unless-stopped
+#    volumes:
+#      - ./config/config.yml:/config/config.yml
+    healthcheck:
+      test: curl -s -f http://localhost:9327/metrics
+      timeout: 30s
+      interval: 2m
+      retries: 3
+      start_period: 30s
