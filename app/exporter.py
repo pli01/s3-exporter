@@ -59,6 +59,9 @@ class S3Collector(object):
         self._s3config.update_option('use_https', use_https)
         signature = config.get('signature_v2', True)
         self._s3config.update_option('signature_v2', signature)
+        check_ssl_certificate = config.get('check_ssl_certificate', True)
+        if check_ssl_certificate:
+            self._s3config.update_option('check_ssl_certificate', check_ssl_certificate)
 
         if len(self._s3config.access_key)==0:
             self._s3config.role_config()
@@ -146,7 +149,7 @@ if __name__ == "__main__":
     parser.add_argument('config_file_path', help='Path of the config file')
     args = parser.parse_args()
     with open(args.config_file_path) as config_file:
-        config = yaml.load(config_file)
+        config = yaml.load(config_file, Loader=yaml.FullLoader)
         log_level = config.get('log_level', DEFAULT_LOG_LEVEL)
         logging.basicConfig(
                 format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
